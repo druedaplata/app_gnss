@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="utf-8">
+    <title>Directly accessing Street View data</title>
+    <!-- Bootstrap -->
+    <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/static/css/gnss.css" rel="stylesheet">
+  </head>
+
+  <body>
+    <div class="container">
+      <div class="row">
+        <div class="col-md-6 col-md-offset-3 col-xs-12">
+          <div id="map"></div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-4 img-responsive">
+          <div id="pano"></div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-4 img-responsive">
+          <div id="segment_pano"></div>
+        </div>
+      </div>
+
+    </div>
+
+    <script>
+      /*
+       * Click the map to set a new location for the Street View camera.
+       */
+
+      var map;
+      //var panorama;
+
+      function initMap() {
+        var berkeley = {lat: 37.869085, lng: -122.254775};
+        var sv = new google.maps.StreetViewService();
+
+        //panorama = new google.maps.StreetViewPanorama(document.getElementById('pano'));
+
+        // Set up the map.
+        map = new google.maps.Map(document.getElementById('map'), {
+          center: berkeley,
+          zoom: 16,
+          streetViewControl: false
+        });
+
+        // Set the initial Street View camera to the center of the map
+        sv.getPanorama({location: berkeley, radius: 50}, processSVData);
+
+        // Look for a nearby Street View panorama when the map is clicked.
+        // getPanoramaByLocation will return the nearest pano when the
+        // given radius is 50 meters or less.
+        map.addListener('click', function(event) {
+          sv.getPanorama({location: event.latLng, radius: 50}, processSVData);
+        });
+      }
+
+      function processSVData(data, status) {
+        if (status === 'OK') {
+          var marker = new google.maps.Marker({
+            position: data.location.latLng,
+            map: map,
+            title: data.location.description
+          });
+          $.ajax({
+              type: 'POST',
+              contentType: "application/json; charset=utf-8",
+              url: "{{ url_for('get_raw_panorama') }}",
+              data: JSON.stringify({pano_id: data.location.pano}),
+              success: function(response){
+                document.getElementById('pano').innerHTML = "";
+                var img = document.createElement("IMG");
+                img.setAttribute("src", response);
+                img.setAttribute("class", "pano_image");
+                document.getElementById('pano').appendChild(img);
+              }
+
+          });
+
+
+          marker.addListener('click', function() {
+            setMapOnAll(null)
+            var markerPanoID = data.location.pano;
+
+
+          });
+        } else {
+          console.error('Street View data not found for this location.');
+        }
+      }
+    </script>
+
+    <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC-ajGOO9QlAAlH_pOhywj0q6hdFpkI0Ks&callback=initMap">
+    </script>
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="/static/js/bootstrap.min.js"></script>
+  </body>
+</html>
