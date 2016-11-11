@@ -1,0 +1,15 @@
+#map {
+  height: 300px;
+  width: 600px;
+}
+
+.pano_image {
+  max-width: 100%;
+  max-height: 100%;
+}
+
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
