@@ -23,7 +23,7 @@
       </div>
       <div class="row">
         <div class="col-md-4 img-responsive">
-          <div id="segment_pano"></div>
+          <div id="segmented"></div>
         </div>
       </div>
 
@@ -71,12 +71,20 @@
           $.ajax({
               type: 'POST',
               contentType: "application/json; charset=utf-8",
-              url: "{{ url_for('get_raw_panorama') }}",
+              url: "{{ url_for('process_location') }}",
               data: JSON.stringify({pano_id: data.location.pano}),
               success: function(response){
                 document.getElementById('pano').innerHTML = "";
                 var img = document.createElement("IMG");
-                img.setAttribute("src", response);
+                img.setAttribute("src", response.raw_panorama);
+                img.setAttribute("class", "pano_image");
+                document.getElementById('pano').appendChild(img);
+
+
+
+                document.getElementById('segmented').innerHTML = "";
+                var img = document.createElement("IMG");
+                img.setAttribute("src", response.segmented);
                 img.setAttribute("class", "pano_image");
                 document.getElementById('pano').appendChild(img);
               }
