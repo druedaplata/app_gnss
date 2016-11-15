@@ -18,12 +18,12 @@ def get_raw_panorama(pano_id):
 
   url = "http://cbk0.google.com/cbk?output=tile&panoid=%s&zoom=3&x=[0-6]&y=[0-2]" % (pano_id)
   command = "-o"
-  name = "static/tiles/tile_#1_#2.jpg"
+  name = "static/images/tiles/tile_#1_#2.jpg"
   cmd = ["curl", url, command, name]
 
   subprocess.call(cmd)
 
-  image_paths = list(map(str.strip, glob.glob('static/tiles/*.jpg')))
+  image_paths = list(map(str.strip, glob.glob('static/images/tiles/*.jpg')))
   image_paths.sort(key=natural_keys)
 
   images_data = map(Image.open, image_paths)
@@ -45,9 +45,9 @@ def get_raw_panorama(pano_id):
 
   name = next(tempfile._get_candidate_names())
   w,h = panorama.size
-  panorama.crop((0,0, 2.15*h, h)).save("static/panorama/%s.png" % (name))
+  panorama.crop((0,0, 2.15*h, h)).save("static/images/panorama/%s.png" % (name))
 
-  print "Raw panorama image has been saved in [static/panorama/%s.png]" % (name)
-  return "static/panorama/%s.png" % (name)
+  print "Raw panorama image has been saved in [static/images/panorama/%s.png]" % (name)
+  return "static/images/panorama/%s.png" % (name)
 
 

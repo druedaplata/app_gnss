@@ -1,2 +1,0 @@
-# In this folder all tiles downloaded from street view api are stored,
-# this files are temporary and replaced each time

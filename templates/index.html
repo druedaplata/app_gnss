@@ -20,10 +20,16 @@
         <div class="col-md-4 img-responsive">
           <div id="pano"></div>
         </div>
-      </div>
-      <div class="row">
         <div class="col-md-4 img-responsive">
           <div id="segmented"></div>
+        </div>
+        <div class="col-md-4 img-responsive">
+          <div id="cropped"></div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-8 col-md-offset-2 img-responsive">
+          <div id="planet"></div>
         </div>
       </div>
 
@@ -74,19 +80,30 @@
               url: "{{ url_for('process_location') }}",
               data: JSON.stringify({pano_id: data.location.pano}),
               success: function(response){
+                console.log(response);
                 document.getElementById('pano').innerHTML = "";
                 var img = document.createElement("IMG");
-                img.setAttribute("src", response.raw_panorama);
+                img.setAttribute("src", response.panorama);
                 img.setAttribute("class", "pano_image");
                 document.getElementById('pano').appendChild(img);
-
-
 
                 document.getElementById('segmented').innerHTML = "";
                 var img = document.createElement("IMG");
                 img.setAttribute("src", response.segmented);
                 img.setAttribute("class", "pano_image");
-                document.getElementById('pano').appendChild(img);
+                document.getElementById('segmented').appendChild(img);
+
+                document.getElementById('cropped').innerHTML = "";
+                var img = document.createElement("IMG");
+                img.setAttribute("src", response.cropped);
+                img.setAttribute("class", "pano_image");
+                document.getElementById('cropped').appendChild(img);
+
+                document.getElementById('planet').innerHTML = "";
+                var img = document.createElement("IMG");
+                img.setAttribute("src", response.planet);
+                img.setAttribute("class", "pano_image");
+                document.getElementById('planet').appendChild(img);
               }
 
           });
