@@ -8,8 +8,10 @@
 
 3. Save the file in **static/nn_files/**
 
-4. Install the requirements **pip install -r requirements.txt**
+4. Install opencv from terminal **sudo apt-get install libopencv-dev python-opencv**
 
-5. Run the Flask application with **python main.py**
+5. Install the requirements **pip install -r requirements.txt**
+
+6. Run the Flask application with **python main.py**
 
 
