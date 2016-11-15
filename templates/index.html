@@ -11,29 +11,33 @@
 
   <body>
     <div class="container">
-      <div class="row">
-        <div class="col-md-6 col-md-offset-3 col-xs-12">
-          <div id="map"></div>
+      <div class="row" style="margin-top: 10px">
+        <div id="map" class="col-md-4">
         </div>
-      </div>
-      <div class="row">
-        <div class="col-md-4 img-responsive">
-          <div id="pano"></div>
-        </div>
-        <div class="col-md-4 img-responsive">
-          <div id="segmented"></div>
-        </div>
-        <div class="col-md-4 img-responsive">
-          <div id="cropped"></div>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-md-8 col-md-offset-2 img-responsive">
-          <div id="planet"></div>
-        </div>
-      </div>
 
+        <div class="col-md-4">
+          <div class="row">
+            <div id="pano" class="col-md-12 img-responsive">
+            </div>
+          </div>
+          <div class="row" style="margin-top: 10px">
+            <div id="segmented" class="col-md-12 img-responsive">
+            </div>
+          </div>
+          <div class="row" style="margin-top: 10px">
+            <div id="cropped" class="col-md-12 img-responsive">
+            </div>
+          </div>
+        </div>
+      </div>
+        <div class="row" style="margin-top: 10px">
+          <div id="planet_normal" class="col-md-4 img-responsive">
+          </div>
+          <div id="planet_cropped" class="col-md-4 img-responsive">
+          </div>
+        </div>
     </div>
+
 
     <script>
       /*
@@ -44,7 +48,7 @@
       //var panorama;
 
       function initMap() {
-        var berkeley = {lat: 37.869085, lng: -122.254775};
+        var berkeley = {lat: 7.123439144882973, lng: -73.11064123719297};
         var sv = new google.maps.StreetViewService();
 
         //panorama = new google.maps.StreetViewPanorama(document.getElementById('pano'));
@@ -80,7 +84,7 @@
               url: "{{ url_for('process_location') }}",
               data: JSON.stringify({pano_id: data.location.pano}),
               success: function(response){
-                console.log(response);
+
                 document.getElementById('pano').innerHTML = "";
                 var img = document.createElement("IMG");
                 img.setAttribute("src", response.panorama);
@@ -99,18 +103,23 @@
                 img.setAttribute("class", "pano_image");
                 document.getElementById('cropped').appendChild(img);
 
-                document.getElementById('planet').innerHTML = "";
+                document.getElementById('planet_normal').innerHTML = "";
                 var img = document.createElement("IMG");
-                img.setAttribute("src", response.planet);
+                img.setAttribute("src", response.planet_normal);
                 img.setAttribute("class", "pano_image");
-                document.getElementById('planet').appendChild(img);
+                document.getElementById('planet_normal').appendChild(img);
+
+                document.getElementById('planet_cropped').innerHTML = "";
+                var img = document.createElement("IMG");
+                img.setAttribute("src", response.planet_cropped);
+                img.setAttribute("class", "pano_image");
+                document.getElementById('planet_cropped').appendChild(img);
               }
 
           });
 
 
           marker.addListener('click', function() {
-            setMapOnAll(null)
             var markerPanoID = data.location.pano;
 
 
@@ -129,3 +138,5 @@
     <script src="/static/js/bootstrap.min.js"></script>
   </body>
 </html>
+
+
