@@ -7,7 +7,12 @@ from skimage.transform import warp
 
 
 def get_planet_image(image_path):
+  """ Gets a panorama image path and returns
+      a stereographic projection aka plante projection
 
+      Attributes:
+        image_path: String panorama path
+  """
   img = Image.open(image_path)
   img.transpose(Image.FLIP_TOP_BOTTOM).save('static/images/mirror.png')
 

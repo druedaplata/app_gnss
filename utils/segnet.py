@@ -12,22 +12,36 @@ import tempfile
 
 
 def join_images_horizontally(images):
-  """ receives a pair of images in numpy format, not paths """
+  """ Receives two images in a list, in numpy array format
+      and joins them horizontally
+
+      Attributes:
+        images: numpy array list
+  """
   return np.concatenate((images[0], images[1]), axis=1)
 
 
+
 def slice_and_resize(img_path):
+  """ Receives a panorama picture of 3600x1600 pixels aprox,
+      slice the image in two parts horizontally,
+      and resize each part to 480x360
+
+      Attributes:
+        img_path: String panorama path
+  """
   # read image
   img = Image.open(img_path)
   width, height = img.size
 
-  #slice image in 3 parts horizontally, not looping
+  #slice image in 2 parts horizontally, not looping
   image_parts = []
   step = width/2
 
   image_parts.append(img.crop((0, 0, step, height)))
   image_parts.append(img.crop((step, 0, step*2, height)))
 
+  # resize images
   resized_images = [ resizeimage.resize_cover(img, [480,360]) for img in image_parts ]
 
   # Convert PIL Image to OpenCV image
@@ -37,6 +51,15 @@ def slice_and_resize(img_path):
 
 
 def get_masked_image(normal_image, segmented_image):
+
+  """ Gets a normal image and a segmented image,
+      and uses the segmented sky (gray) from segmented image
+      to crop from the normal image. Save it and return the path.
+
+      Attributes:
+        normal_image: numpy array
+        segmented_image: numpy array
+  """
   color = [128, 128, 128]
   # create boundaries, same color but needs two arguments later on
   lower = np.array(color, dtype="uint8")
@@ -51,9 +74,28 @@ def get_masked_image(normal_image, segmented_image):
   cv2.imwrite(path, output)
   return path
 
+
 def get_normal_segmented_and_cropped_image(image_path):
 
-  # Setup Caffe SegNet, change accordingly to installation path
+  """ Gets a path for a panorama image of 3600x1600 pixels,
+      resize the image to two 480x360 images,
+      uses caffe segnet to segment them,
+      and crop the sky from the normal image.
+
+      Attributes:
+        image_path: string panorama path
+  """
+
+  # 1. Resize the panorama image in two 480x360 images
+  resized_images = slice_and_resize(image_path)
+
+  # 2. Join the images in a full normal panorama image and save it
+  normal_full_img = join_images_horizontally(resized_images)
+  name = next(tempfile, _get_candidate_names())
+  normal_path = "static/images/panorama/%s_resized.png" % (name)
+  cv2.imwrite(normal_path, normal_full_img)
+
+  # 3. Setup caffe Segnet, change accordingly to installation path
   sys.path.append('/usr/local/lib/python2.7/site-packages')
   caffe_root = '/home/drueda/caffe-segnet/'
   sys.path.insert(0, caffe_root + 'python')
@@ -70,17 +112,7 @@ def get_normal_segmented_and_cropped_image(image_path):
   output_shape = net.blobs['argmax'].data.shape
   label_colours = cv2.imread(colours).astype(np.uint8)
 
-  # slize and resize image_path
-  resized_images = slice_and_resize(image_path)
-
-  # join the parts in a full image
-  normal_full_img = join_images_horizontally(resized_images)
-  # and save
-  name = next(tempfile._get_candidate_names())
-  normal_path = "static/images/panorama/%s_resized.png" % (name)
-  cv2.imwrite(normal_path, normal_full_img)
-
-  # Use Segnet to segmentate each image separately
+  # 4. Use Segnet to segmente each image separately
   segmented_images = []
 
   for image in resized_images:
@@ -98,14 +130,13 @@ def get_normal_segmented_and_cropped_image(image_path):
 
     segmented_images.append(segmentation_rgb)
 
-  # Create a single full image from the segmented parts
+  # 5. Create a single full image from the segmented parts
   segmented_full_image = join_images_horizontally(segmented_images)
-
   name = next(tempfile._get_candidate_names())
   segment_path = "static/images/segmented/%s_resized.png" % (name)
   cv2.imwrite(segment_path, segmented_full_image)
 
-  # Crop the sky from the segmented image, color #808080 or 128,128,128
+  # 6. Crop the sky from the segmented image, color #808080 or 128,128,128
   cropped_path = get_masked_image(normal_full_img, segmented_full_image)
 
 
