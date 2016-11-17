@@ -91,7 +91,7 @@ def get_normal_segmented_and_cropped_image(image_path):
 
   # 2. Join the images in a full normal panorama image and save it
   normal_full_img = join_images_horizontally(resized_images)
-  name = next(tempfile, _get_candidate_names())
+  name = next(tempfile._get_candidate_names())
   normal_path = "static/images/panorama/%s_resized.png" % (name)
   cv2.imwrite(normal_path, normal_full_img)
 
@@ -112,10 +112,10 @@ def get_normal_segmented_and_cropped_image(image_path):
   output_shape = net.blobs['argmax'].data.shape
   label_colours = cv2.imread(colours).astype(np.uint8)
 
-  # 4. Use Segnet to segmente each image separately
-  segmented_images = []
+  # 4. Use Segnet to segment each image separately
 
-  for image in resized_images:
+  def segment_image(image):
+    input_image = image.transpose((2,0,1))
     input_image = image.transpose((2,0,1))
     input_image = np.asarray([input_image])
 
@@ -128,13 +128,30 @@ def get_normal_segmented_and_cropped_image(image_path):
 
     cv2.LUT(segmentation_ind_3ch, label_colours, segmentation_rgb)
 
-    segmented_images.append(segmentation_rgb)
+    return segmentation_rgb
+
+  segmented_images = map(segment_image, resized_images)
 
   # 5. Create a single full image from the segmented parts
   segmented_full_image = join_images_horizontally(segmented_images)
   name = next(tempfile._get_candidate_names())
   segment_path = "static/images/segmented/%s_resized.png" % (name)
   cv2.imwrite(segment_path, segmented_full_image)
+
+  """
+  Commented out, code to include trees in top half
+
+  # 5.a Change top half of trees into sky color
+  height, width, c = segmented_full_image.shape
+
+  # OpenCV works in BGR format
+  for x in range(width):
+    for y in range(height/2):
+      if segmented_full_image[y,x].tolist() == [0, 128, 128]:
+        segmented_full_image[y,x] = [128, 128, 128]
+
+  cv2.imwrite('tmp.png', segmented_full_image)
+  """
 
   # 6. Crop the sky from the segmented image, color #808080 or 128,128,128
   cropped_path = get_masked_image(normal_full_img, segmented_full_image)

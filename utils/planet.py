@@ -14,9 +14,9 @@ def get_planet_image(image_path):
         image_path: String panorama path
   """
   img = Image.open(image_path)
-  img.transpose(Image.FLIP_TOP_BOTTOM).save('static/images/mirror.png')
+  img_mirror = img.transpose(Image.FLIP_TOP_BOTTOM)
 
-  pano = np.asarray(Image.open(os.path.expanduser('static/images/mirror.png')))
+  pano = np.asarray(img_mirror)
 
   input_shape = pano.shape
   output_shape = (480, 480)

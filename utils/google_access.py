@@ -63,8 +63,8 @@ def get_raw_panorama(pano_id):
   w,h = panorama.size
   pano_path = "static/images/panorama/%s.png" % (name)
 
-  panorama.crop((0,0, 2.15*h, h)).save(path)
+  panorama.crop((0,0, 2.15*h, h)).save(pano_path)
 
-  return path
+  return pano_path
 
 
