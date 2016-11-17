@@ -48,7 +48,7 @@
       //var panorama;
 
       function initMap() {
-        var berkeley = {lat: 7.123439144882973, lng: -73.11064123719297};
+        var berkeley = {lat: 40.72815832561118, lng: -73.99564975565187};
         var sv = new google.maps.StreetViewService();
 
         //panorama = new google.maps.StreetViewPanorama(document.getElementById('pano'));
@@ -71,6 +71,14 @@
         });
       }
 
+      function setImage(id, source){
+          document.getElementById(id).innerHTML = "";
+          var img = document.createElement("IMG");
+          img.setAttribute("src", source);
+          img.setAttribute("class", "pano_image");
+          document.getElementById(id).appendChild(img);
+      };
+
       function processSVData(data, status) {
         if (status === 'OK') {
           var marker = new google.maps.Marker({
@@ -85,37 +93,15 @@
               data: JSON.stringify({pano_id: data.location.pano}),
               success: function(response){
 
-                document.getElementById('pano').innerHTML = "";
-                var img = document.createElement("IMG");
-                img.setAttribute("src", response.panorama);
-                img.setAttribute("class", "pano_image");
-                document.getElementById('pano').appendChild(img);
+                console.log(data.location.latLng.lat());
+                console.log(data.location.latLng.lng());
 
-                document.getElementById('segmented').innerHTML = "";
-                var img = document.createElement("IMG");
-                img.setAttribute("src", response.segmented);
-                img.setAttribute("class", "pano_image");
-                document.getElementById('segmented').appendChild(img);
-
-                document.getElementById('cropped').innerHTML = "";
-                var img = document.createElement("IMG");
-                img.setAttribute("src", response.cropped);
-                img.setAttribute("class", "pano_image");
-                document.getElementById('cropped').appendChild(img);
-
-                document.getElementById('planet_normal').innerHTML = "";
-                var img = document.createElement("IMG");
-                img.setAttribute("src", response.planet_normal);
-                img.setAttribute("class", "pano_image");
-                document.getElementById('planet_normal').appendChild(img);
-
-                document.getElementById('planet_cropped').innerHTML = "";
-                var img = document.createElement("IMG");
-                img.setAttribute("src", response.planet_cropped);
-                img.setAttribute("class", "pano_image");
-                document.getElementById('planet_cropped').appendChild(img);
+                setImage('pano', response.panorama);
+                setImage('segmented', response.segmented);
+                setImage('cropped', response.cropped);
+                setImage('planet_normal', response.planet_normal);
+                setImage('planet_cropped', response.planet_cropped);
               }
-
           });
 
 
