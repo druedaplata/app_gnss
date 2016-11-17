@@ -15,6 +15,8 @@ def index():
 def process_location():
   pano_id = request.json['pano_id']
   pano_path = ga.get_raw_panorama(pano_id)
+
+
   normal_path, segment_path, cropped_path = sg.get_normal_segmented_and_cropped_image(pano_path)
   planet_normal = pl.get_planet_image(normal_path)
   planet_cropped = pl.get_planet_image(cropped_path)
