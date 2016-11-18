@@ -50,52 +50,34 @@ def slice_and_resize(img_path):
   return images
 
 
-def get_masked_image(normal_image, segmented_image):
-
-  """ Gets a normal image and a segmented image,
-      and uses the segmented sky (gray) from segmented image
-      to crop from the normal image. Save it and return the path.
-
-      Attributes:
-        normal_image: numpy array
-        segmented_image: numpy array
+def get_normal_image(image_path):
   """
-  color = [128, 128, 128]
-  # create boundaries, same color but needs two arguments later on
-  lower = np.array(color, dtype="uint8")
-  upper = np.array(color, dtype="uint8")
+  Gets a panorama image of 3600x1600 pixels aprox.
+  and returns a path to a resized 960x360 image.
 
-  # find the colors within the boundaries and apply the mask
-  mask = cv2.inRange(segmented_image, lower, upper)
-  output = cv2.bitwise_and(normal_image, normal_image, mask = mask)
-
-  name = next(tempfile._get_candidate_names())
-  path = "static/images/cropped/%s.png" % (name)
-  cv2.imwrite(path, output)
-  return path
-
-
-def get_normal_segmented_and_cropped_image(image_path):
-
-  """ Gets a path for a panorama image of 3600x1600 pixels,
-      resize the image to two 480x360 images,
-      uses caffe segnet to segment them,
-      and crop the sky from the normal image.
-
-      Attributes:
-        image_path: string panorama path
+    Attributes:
+      image_path: String
   """
-
-  # 1. Resize the panorama image in two 480x360 images
   resized_images = slice_and_resize(image_path)
 
-  # 2. Join the images in a full normal panorama image and save it
   normal_full_img = join_images_horizontally(resized_images)
   name = next(tempfile._get_candidate_names())
   normal_path = "static/images/panorama/%s_resized.png" % (name)
   cv2.imwrite(normal_path, normal_full_img)
 
-  # 3. Setup caffe Segnet, change accordingly to installation path
+  return normal_path
+
+
+def get_segmented_image(image_path):
+  """
+  Gets a panorama image of 960x360 pixels,
+  and returns a path to a segmented 960x360 image.
+
+    Attributes:
+      image_path: String
+  """
+
+  # Setup Caffe Segnet
   sys.path.append('/usr/local/lib/python2.7/site-packages')
   caffe_root = '/home/drueda/caffe-segnet/'
   sys.path.insert(0, caffe_root + 'python')
@@ -112,7 +94,7 @@ def get_normal_segmented_and_cropped_image(image_path):
   output_shape = net.blobs['argmax'].data.shape
   label_colours = cv2.imread(colours).astype(np.uint8)
 
-  # 4. Use Segnet to segment each image separately
+  resized_images = slice_and_resize(image_path)
 
   def segment_image(image):
     input_image = image.transpose((2,0,1))
@@ -138,26 +120,49 @@ def get_normal_segmented_and_cropped_image(image_path):
   segment_path = "static/images/segmented/%s_resized.png" % (name)
   cv2.imwrite(segment_path, segmented_full_image)
 
+  return segment_path
+
+
+def get_masked_image(normal_image, segmented_image):
+
+  """ Gets a normal image and a segmented image,
+      and uses the segmented sky (gray) from segmented image
+      to crop from the normal image. Save it and return the path.
+
+      Attributes:
+        normal_image: numpy array
+        segmented_image: numpy array
   """
-  Commented out, code to include trees in top half
+  color = [128, 128, 128]
+  # create boundaries, same color but needs two arguments later on
+  lower = np.array(color, dtype="uint8")
+  upper = np.array(color, dtype="uint8")
 
-  # 5.a Change top half of trees into sky color
-  height, width, c = segmented_full_image.shape
+  # find the colors within the boundaries and apply the mask
+  mask = cv2.inRange(segmented_image, lower, upper)
+  output = cv2.bitwise_and(normal_image, normal_image, mask = mask)
 
-  # OpenCV works in BGR format
-  for x in range(width):
-    for y in range(height/2):
-      if segmented_full_image[y,x].tolist() == [0, 128, 128]:
-        segmented_full_image[y,x] = [128, 128, 128]
+  name = next(tempfile._get_candidate_names())
+  path = "static/images/cropped/%s.png" % (name)
+  cv2.imwrite(path, output)
+  return path
 
-  cv2.imwrite('tmp.png', segmented_full_image)
+
+def get_cropped_image(normal_path, segment_path):
+
+  """ Gets two paths for a normal and a segment image,
+      and return a path to a cropped sky image.
+
+      Attributes:
+        normal_path: String
+        segment_path: String
   """
+  normal_img = cv2.imread(normal_path)
+  segment_img = cv2.imread(segment_path)
 
-  # 6. Crop the sky from the segmented image, color #808080 or 128,128,128
-  cropped_path = get_masked_image(normal_full_img, segmented_full_image)
+  cropped_path = get_masked_image(normal_img, segment_img)
 
-
-  return normal_path, segment_path, cropped_path
+  return cropped_path
 
 
 
