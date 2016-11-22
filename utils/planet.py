@@ -19,7 +19,7 @@ def get_planet_image(image_path):
   pano = np.asarray(img_mirror)
 
   input_shape = pano.shape
-  output_shape = (480, 480)
+  output_shape = (1080, 1080)
 
   def output_coord_to_r_theta(coords):
     """
