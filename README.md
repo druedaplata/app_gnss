@@ -10,7 +10,7 @@
 
 4. Save the file in **static/nn_files/**
 
-5. Install the requirements **pip install -r requirements.txt**
+5. Install the requirements **sudo pip install -r requirements.txt**
 
 6. Run the Flask application with **python main.py**
 
