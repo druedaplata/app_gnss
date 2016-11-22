@@ -12,12 +12,13 @@
   <body>
     <div class="container">
       <div class="row" style="margin-top: 10px">
-        <div id="map" class="col-md-4">
+        <div id="map" style="width: 300px; height: 300px; float:left" class="col-md-4">
         </div>
-
+        <div id="pano" style="width: 300px; height: 300px;float:left" class="col-md-4">
+        </div>
         <div class="col-md-4">
           <div class="row">
-            <div id="pano" class="col-md-12 img-responsive">
+            <div id="raw_pano" class="col-md-12 img-responsive">
             </div>
           </div>
           <div class="row" style="margin-top: 10px">
@@ -45,13 +46,13 @@
        */
 
       var map;
-      //var panorama;
+      var panorama;
 
       function initMap() {
         var berkeley = {lat: 40.72815832561118, lng: -73.99564975565187};
         var sv = new google.maps.StreetViewService();
 
-        //panorama = new google.maps.StreetViewPanorama(document.getElementById('pano'));
+        panorama = new google.maps.StreetViewPanorama(document.getElementById('pano'));
 
         // Set up the map.
         map = new google.maps.Map(document.getElementById('map'), {
@@ -86,6 +87,13 @@
             map: map,
             title: data.location.description
           });
+
+          panorama.setPano(data.location.pano);
+          panorama.setPov({
+            heading: 0,
+            pitch: 0
+          });
+          panorama.setVisible(true);
           $.ajax({
               type: 'POST',
               contentType: "application/json; charset=utf-8",
@@ -96,7 +104,7 @@
                 console.log(data.location.latLng.lat());
                 console.log(data.location.latLng.lng());
 
-                setImage('pano', response.panorama);
+                setImage('raw_pano', response.panorama);
                 setImage('segmented', response.segmented);
                 setImage('cropped', response.cropped);
                 setImage('planet_normal', response.planet_normal);
