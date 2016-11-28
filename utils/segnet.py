@@ -1,4 +1,4 @@
-from PIL import Image
+from PIL import Image, ImageDraw, ImageFont
 import numpy as np
 import matplotlib.pyplot as plt
 import os.path
@@ -18,7 +18,8 @@ def join_images_horizontally(images):
       Attributes:
         images: numpy array list
   """
-  return np.concatenate((images[0], images[1]), axis=1)
+  array = np.concatenate((images[0], images[1]), axis=1)
+  return Image.fromarray(np.uint8(array))
 
 
 
@@ -44,10 +45,7 @@ def slice_and_resize(img_path):
   # resize images
   resized_images = [ resizeimage.resize_cover(img, [480,360]) for img in image_parts ]
 
-  # Convert PIL Image to OpenCV image
-  images = [ cv2.cvtColor(np.array(img), cv2.COLOR_RGB2BGR) for img in resized_images ]
-
-  return images
+  return resized_images
 
 
 def get_normal_image(image_path):
@@ -61,12 +59,12 @@ def get_normal_image(image_path):
   resized_images = slice_and_resize(image_path)
 
   normal_full_img = join_images_horizontally(resized_images)
+
   name = next(tempfile._get_candidate_names())
   normal_path = "static/images/panorama/%s_resized.png" % (name)
-  cv2.imwrite(normal_path, normal_full_img)
+  normal_full_img.save(normal_path)
 
   return normal_path
-
 
 def get_segmented_image(image_path):
   """
@@ -88,13 +86,17 @@ def get_segmented_image(image_path):
   colours = 'static/nn_files/camvid12.png'
 
   net = caffe.Net(model,weights, caffe.TEST)
-  caffe.set_mode_gpu()
+  caffe.set_mode_cpu()
 
   input_shape = net.blobs['data'].data.shape
   output_shape = net.blobs['argmax'].data.shape
   label_colours = cv2.imread(colours).astype(np.uint8)
 
   resized_images = slice_and_resize(image_path)
+
+  images = [ cv2.cvtColor(np.array(img), cv2.COLOR_RGB2BGR) for img in resized_images ]
+
+
 
   def segment_image(image):
     input_image = image.transpose((2,0,1))
@@ -112,14 +114,13 @@ def get_segmented_image(image_path):
 
     return segmentation_rgb
 
-  segmented_images = map(segment_image, resized_images)
+  segmented_images = map(segment_image, images)
 
   # 5. Create a single full image from the segmented parts
   segmented_full_image = join_images_horizontally(segmented_images)
   name = next(tempfile._get_candidate_names())
   segment_path = "static/images/segmented/%s_resized.png" % (name)
-  cv2.imwrite(segment_path, segmented_full_image)
-
+  segmented_full_image.save(segment_path)
   return segment_path
 
 
