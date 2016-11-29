@@ -15,3 +15,18 @@
 6. Run the Flask application with **python main.py**
 
 
+## How it works?
+
+1. We start by using a location from Google Maps Api.
+![gmaps_api](https://raw.githubusercontent.com/sandiego206/app_gnss/master/static/images/readme_images/gmaps_api.jpg)
+
+2. We extract a raw panorama image from Google Maps Api, stitching several tiles from street view.
+![raw_panorama](https://raw.githubusercontent.com/sandiego206/app_gnss/master/static/images/readme_images/pano.jpg)
+
+3. From the raw panorama, we use SegNet to segment the image and later on extract the sky from this image.
+![segment](https://raw.githubusercontent.com/sandiego206/app_gnss/master/static/images/readme_images/segmented.jpg)
+
+
+
+
+
