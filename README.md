@@ -28,12 +28,11 @@
 
 4. We extract the sky from the previous image using a mask for the color gray, and draw elevation and cardinal lines.
    The north must be set manually (at the moment)
-![sky_extract]()
+![sky_extract](https://raw.githubusercontent.com/sandiego206/app_gnss/master/static/images/readme_images/sky_extract.jpg)
 
 5. We now use a stereographic projection in the panorama image, to display the enitre sky in the center region.
    And we (at the moment) generate random (elevation, azimut) pairs of data and correctly display them in the image.
-![normal_stereographic]()
-![extracted_stereographic]()
+![stereo_images](https://raw.githubusercontent.com/sandiego206/app_gnss/master/static/images/readme_images/stereo_images.jpg)
 
 
 
