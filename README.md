@@ -32,6 +32,7 @@
 
 5. We now use a stereographic projection in the panorama image, to display the enitre sky in the center region.
    And we (at the moment) generate random (elevation, azimut) pairs of data and correctly display them in the image.
+   
 ![stereo_images](https://raw.githubusercontent.com/sandiego206/app_gnss/master/static/images/readme_images/stereo_images.jpg)
 
 
