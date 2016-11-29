@@ -21,10 +21,12 @@ def process_location():
   segment_path = sg.get_segmented_image(normal_path)
   cropped_path = sg.get_cropped_image(normal_path, segment_path)
 
-  gd.set_elevation_lines(normal_path)
-  gd.set_elevation_lines(cropped_path)
+  north_w_point = 850
 
-  data = gd.generate_random_data(normal_path)
+  gd.set_elevation_lines(normal_path, north_w_point)
+  gd.set_elevation_lines(cropped_path, north_w_point)
+
+  data = gd.generate_random_data(normal_path, north_w_point)
 
   planet_normal = pl.get_planet_image(normal_path)
   planet_cropped = pl.get_planet_image(cropped_path)
@@ -34,8 +36,8 @@ def process_location():
   gd.set_points(planet_cropped, data)
 
 
-  gd.set_directions(planet_normal)
-  gd.set_directions(planet_cropped)
+  gd.set_directions(planet_normal, north_w_point)
+  gd.set_directions(planet_cropped, north_w_point)
 
 
   output = {}
