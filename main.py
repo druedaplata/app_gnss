@@ -41,7 +41,7 @@ def process_location():
 
 
   output = {}
-  output['panorama'] = normal_path
+  output['panorama'] = pano_path
   output['segmented'] = segment_path
   output['cropped'] = cropped_path
   output['planet_normal'] = planet_normal
