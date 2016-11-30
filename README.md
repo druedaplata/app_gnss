@@ -20,21 +20,25 @@
 1. We start by using a location from Google Maps Api.
 ![gmaps_api](https://raw.githubusercontent.com/sandiego206/app_gnss/master/static/images/readme_images/gmaps_api.jpg)
 
-2. We extract a raw panorama image showing a 360° image from Google Maps Api, stitching several tiles from street view.
+2. We create an equirectangular image showing a 360° view of the location from Google Maps Api, we do this by stitching several tiles obtained from Street View Api.
 ![raw_panorama](https://raw.githubusercontent.com/sandiego206/app_gnss/master/static/images/readme_images/pano.jpg)
 
-3. From the raw panorama, we use SegNet to segment the image.
+3. From the equirectangular image, we use SegNet to segment the image.
 ![segment](https://raw.githubusercontent.com/sandiego206/app_gnss/master/static/images/readme_images/segmented.jpg)
 
 4. We extract the sky from the previous image using a mask for the color gray, and draw elevation and cardinal lines.
    The north must be set manually (at the moment)
 ![sky_extract](https://raw.githubusercontent.com/sandiego206/app_gnss/master/static/images/readme_images/sky_extract.jpg)
 
-5. We now use a stereographic projection in the panorama image, to display the enitre sky in the center region.
+5. We now use a stereographic projection in the equirectangular panorama image, to display the enitre sky in the center region.
    And we (at the moment) generate random (elevation, azimut) pairs of data and correctly display them in the image.
-   
 ![stereo_images](https://raw.githubusercontent.com/sandiego206/app_gnss/master/static/images/readme_images/stereo_images.jpg)
 
 
+## To Do:
+
+1. Correctly get the North in each position, and automatically draw in the image.
+2. Find a way to draw the elevation lines accurately according to the stereographic projection.
+3. Be able to create a route in Google Maps Api and generate a video with the final result.
 
 
