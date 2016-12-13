@@ -6,7 +6,6 @@ from PIL import Image, ImageDraw, ImageFont
 
 def transform_polar_to_input(r, theta, w, h, theta_offset):
   # Set X from 0 to 500
-  print r, theta, w, h, theta_offset
   r = 90 - r
   theta = (-1.0*theta) -180 -theta_offset
 
@@ -36,17 +35,15 @@ def generate_random_data(img_path, north_w_point=0):
   el = range(0,90)
   theta_offset = (north_w_point/(w*1.0))*360
 
-  # Return 3 pairs of el,az
-  az_el_pairs = [ (random.choice(az), random.choice(el)) for i in range(3) ]
+  # Return 5 pairs of el,az
+  az_el_pairs = [ (random.choice(az), random.choice(el)) for i in range(5) ]
 
-  #az_el_pairs = [(0,0), (90,0), (180,0), (270,0)]
+  print az_el_pairs
 
   data = []
 
   for (az, el) in az_el_pairs:
-    print "r: %f, theta %f" % (el, az)
     x,y = transform_polar_to_input(el, az, w ,h, theta_offset)
-    print "x: %f, y: %f" % (x, y)
     data.append((x,y))
   return data
 
@@ -114,24 +111,16 @@ def set_directions(img_path, north_w_point=0):
 
   theta_offset = (north_w_point/(w*1.0))*360
   # north (el: 0, az:0)
-  print "directions r: %f, theta: %f" % (0,0)
   x,y = transform_polar_to_input(0, 0, w, h, theta_offset)
-  print "x: %f, y: %f" % (x,y)
   draw.text((x,y+10), "N", (0,255,0), font=font)
   # east (el:0, az:90)
-  print "directions r: %f, theta: %f" % (0,90)
   x,y = transform_polar_to_input(0, 90, w, h, theta_offset)
-  print "x: %f, y: %f" % (x,y)
   draw.text((x,y+10), "E", (0,255,0), font=font)
   # south (el:0, az: 180)
-  print "directions r: %f, theta: %f" % (0,180)
   x,y = transform_polar_to_input(0, 180, w, h, theta_offset)
-  print "x: %f, y: %f" % (x,y)
   draw.text((x,y+10), "S", (0,255,0), font=font)
   # west (el:0, az: 270)
-  print "directions r: %f, theta: %f" % (0,270)
   x,y = transform_polar_to_input(0, 270, w, h, theta_offset)
-  print "x: %f, y: %f" % (x,y)
   draw.text((x,y+10), "W", (0,255,0), font=font)
 
   img.save(img_path)
