@@ -2,9 +2,10 @@
 
 ## Installation Instructions
 
-1. Install opencv using **sudo apt-get install libopencv-dev python-opencv**
+1. Install opencv using **sudo apt-get install libopencv-dev python-opencv python-tk**
 
 2. Follow the instructions to install [SegNet](https://github.com/alexgkendall/caffe-segnet)
+    * Change variable **caffe_root** in file **utils/segnet.py** to your caffe-segnet installation path.
 
 3. Download the necessary model weights from [here](http://mi.eng.cam.ac.uk/%7Eagk34/resources/SegNet/segnet_weights_driving_webdemo.caffemodel)
 
