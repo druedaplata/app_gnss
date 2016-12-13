@@ -10,33 +10,41 @@
   </head>
 
   <body>
-    <div class="container">
+    <div class="container-fluid">
       <div class="row" style="margin-top: 10px">
-        <div id="map" style="width: 300px; height: 300px; float:left" class="col-md-4">
+        <div class="col-md-4 text-center">
+          <h4>1. Pick a date</h4>
         </div>
-        <div id="pano" style="width: 300px; height: 300px;float:left" class="col-md-4">
+        <div class="col-md-4 text-center">
+          <h4>2. Click on the map.</h4>
+          <div id="map" style="width: 300px; height: 300px; float:left">
+          </div>
+          <div id="pano" style="width: 300px; height: 300px;float:left">
+          </div>
         </div>
-        <div class="col-md-4">
-          <div class="row">
-            <div id="raw_pano" class="col-md-12 img-responsive">
-            </div>
-          </div>
-          <div class="row" style="margin-top: 10px">
-            <div id="segmented" class="col-md-12 img-responsive">
-            </div>
-          </div>
-          <div class="row" style="margin-top: 10px">
-            <div id="cropped" class="col-md-12 img-responsive">
-            </div>
-          </div>
+        <div class="col-md-4 text-center">
+          <h4>3. Start</h4>
         </div>
       </div>
-        <div class="row" style="margin-top: 10px">
-          <div id="planet_normal" class="col-md-4 img-responsive">
-          </div>
-          <div id="planet_cropped" class="col-md-4 img-responsive">
+
+      <div class="row" style="margin-top: 40px">
+        <div class="col-md-4 text-center">
+          <h4>Stereographic Projection</h4>
+          <div id="planet_normal" class="img-responsive">
           </div>
         </div>
+        <div class="col-md-4 text-center">
+          <h4>Stereographic Projection + Segmented Sky</h4>
+          <div id="planet_cropped" class="img-responsive">
+          </div>
+        </div>
+        <div class="col-md-4  text-center">
+          <h4>Panorama Image</h4>
+          <div id="raw_pano" class="col-md-12 img-responsive"></div>
+          <h4>Segmented Image</h4>
+          <div id="segmented" class="col-md-12 img-responsive"></div>
+        </div>
+      </div>
     </div>
 
 
@@ -106,7 +114,6 @@
 
                 setImage('raw_pano', response.panorama);
                 setImage('segmented', response.segmented);
-                setImage('cropped', response.cropped);
                 setImage('planet_normal', response.planet_normal);
                 setImage('planet_cropped', response.planet_cropped);
               }
