@@ -77,7 +77,7 @@ def get_segmented_image(image_path):
 
   # Setup Caffe Segnet
   sys.path.append('/usr/local/lib/python2.7/site-packages')
-  caffe_root = '/home/drueda/caffe-segnet/'
+  caffe_root = '/home/drueda/Apps/caffe-segnet/'
   sys.path.insert(0, caffe_root + 'python')
   import caffe
 
