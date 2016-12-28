@@ -15,62 +15,73 @@
         <div class="col-md-4">
           <div class="well">
             <h4>Settings</h4>
-            <form>
-              <div class="col-md-6 form-group">
-                <label for="date">Date:</label>
-                <input id="date" class="form-control" type="text" placeholder="dd/mm/aaaa">
-              </div>
-              <div class="col-md-6 form-group">
-                <label for="time">Time:</label>
-                <input id="time" class="form-control" type="text" placeholder="hh/mm">
-              </div>
-              <div class="col-md-6 form-group">
-                <label for="lat">Latitude</label>
-                <input id="lat" class="form-control" type="text" placeholder="40.72815832561118">
-              </div>
-              <div class="col-md-6 form-group">
-                <label for="lat">Longitude</label>
-                <input id="lat" class="form-control" type="text" placeholder="-73.99564975565187">
-              </div>
-            </form>
             <h5 class="text-center">...or find the place and click on the map.</h5>
             <div class="row">
               <div class="col-md-12">
-                <div id="map" style="width: 550px; height: 300px; float:left">
+                <div id="map" style="width: 570px; height: 362px; float:left">
                 </div>
               </div>
             </div>
+            <div class="row">
+              <form>
+                <div class="col-md-6 form-group">
+                  <label for="date">Date:</label>
+                  <input id="date" class="form-control" type="text" placeholder="dd/mm/aaaa">
+                </div>
+                <div class="col-md-6 form-group">
+                  <label for="time">Time:</label>
+                  <input id="time" class="form-control" type="text" placeholder="hh/mm">
+                </div>
+                <div class="col-md-6 form-group">
+                  <label for="lat">Latitude</label>
+                  <input id="lat" class="form-control" type="text" placeholder="40.72815832561118">
+                </div>
+                <div class="col-md-6 form-group">
+                  <label for="lng">Longitude</label>
+                  <input id="lng" class="form-control" type="text" placeholder="-73.99564975565187">
+                </div>
+              </form>
+            </div>
             <div class="row" style="margin-top: 10px">
               <div class="col-md-4 col-md-offset-4 text-center">
-                <button type="button" class="btn btn-info btn-block">Search</button>
+                <button type="button" onClick="search()" class="btn btn-info btn-block">Search</button>
               </div>
             </div>
           </div>
         </div>
-        <div class="col-md-8">
+        <div class="col-md-4">
+          <ul class="nav nav-tabs">
+            <li class="active"><a data-toggle="tab" href="#normal">Stereographic</a></li>
+            <li><a data-toggle="tab" href="#cropped">Segmented Sky</a></li>
+            <li><a data-toggle="tab" href="#images">Extra images</a></li>
+          </ul>
+          <div class="tab-content">
+            <div id="normal" class="tab-pane fade in active">
+              <div class="row">
+                <div class="col-md-12">
+                  <div id="planet_normal">
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div id="cropped" class="tab-pane fade">
+              <div class="row">
+                <div class="col-md-12">
+                  <div id="planet_cropped">
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div id="images" class="tab-pane fade">
+              <div id="raw_pano" class="col-md-12"></div>
+              <div id="segmented" class="col-md-12"></div>
+            </div>
+          </div>
 
         </div>
 
       </div>
 
-      <div class="row" style="margin-top: 40px">
-        <div class="col-md-4 text-center">
-          <h4>Stereographic Projection</h4>
-          <div id="planet_normal" class="img-responsive">
-          </div>
-        </div>
-        <div class="col-md-4 text-center">
-          <h4>Stereographic Projection + Segmented Sky</h4>
-          <div id="planet_cropped" class="img-responsive">
-          </div>
-        </div>
-        <div class="col-md-4  text-center">
-          <h4>Panorama Image</h4>
-          <div id="raw_pano" class="col-md-12 img-responsive"></div>
-          <h4>Segmented Image</h4>
-          <div id="segmented" class="col-md-12 img-responsive"></div>
-        </div>
-      </div>
     </div>
 
 
@@ -81,65 +92,89 @@
 
       var map;
       var panorama;
+      var sv;
 
-      function initMap() {
-        var berkeley = {lat: 40.72815832561118, lng: -73.99564975565187};
-        var sv = new google.maps.StreetViewService();
+      function initMap(){
 
-        // panorama = new google.maps.StreetViewPanorama(document.getElementById('pano'));
+        // Setup initial options
+        var position = {lat: 40.72815832561118, lng: -73.99564975565187};
+        sv = new google.maps.StreetViewService();
 
-        // Set up the map.
+        // Setup up the map
         map = new google.maps.Map(document.getElementById('map'), {
-          center: berkeley,
+          center: position,
           zoom: 16,
           streetViewControl: false,
           mapTypeControl: false
         });
 
-        // Set the initial Street View camera to the center of the map
-         sv.getPanorama({location: berkeley, radius: 50}, processSVData);
-
-
-
-        // Look for a nearby Street View panorama when the map is clicked.
-        // getPanoramaByLocation will return the nearest pano when the
-        // given radius is 50 meters or less.
+        // Create a marker on click, if the position has Street View data.
         map.addListener('click', function(event) {
-          sv.getPanorama({location: event.latLng, radius: 50}, processSVData);
+          sv.getPanorama({location: event.latLng, radius: 50}, updateLocationByClick);
         });
-      }
 
-      function setImage(id, source){
-          document.getElementById(id).innerHTML = "";
-          var img = document.createElement("IMG");
-          img.setAttribute("src", source);
-          img.setAttribute("class", "pano_image");
-          document.getElementById(id).appendChild(img);
       };
 
-      function processSVData(data, status) {
-        if (status === 'OK') {
+      function updateLocationByClick(data, status){
+        if (status == 'OK'){
+          // Create a marker
           var marker = new google.maps.Marker({
             position: data.location.latLng,
             map: map,
             title: data.location.description
           });
 
-          //panorama.setPano(data.location.pano);
-          //panorama.setPov({
-          //  heading: 0,
-          //  pitch: 0
-          //});
-          //panorama.setVisible(true);
+          map.setCenter(data.location.latLng);
+
+          // Update information in settings
+          document.getElementById('lat').value = data.location.latLng.lat();
+          document.getElementById('lng').value = data.location.latLng.lng();
+
+        } else {
+          console.error('Street View data not found for this location.');
+        }
+
+      };
+
+      function search(options){
+
+        // Get values from settings
+        var lat = document.getElementById('lat').value;
+        var lng = document.getElementById('lng').value;
+
+        if (lat && lng) {
+          // Create a new position
+          var myLatLng = new google.maps.LatLng(Number(lat), Number(lng));
+          sv.getPanorama({location: myLatLng, radius: 50}, updateLocationByClick);
+          sv.getPanorama({location: myLatLng, radius: 50}, processSVData);
+          map.setCenter(myLatLng);
+
+        } else {
+          console.error('You need to set latitude and longitude.');
+        }
+      };
+
+
+      function setImage(id, source){
+          console.log(id);
+          console.log(source);
+          document.getElementById(id).innerHTML = "";
+          var img = document.createElement("IMG");
+          img.setAttribute("src", source);
+          img.setAttribute("class", "img-responsive");
+          document.getElementById(id).appendChild(img);
+      };
+
+
+
+      function processSVData(data, status) {
+        if (status === 'OK') {
           $.ajax({
               type: 'POST',
               contentType: "application/json; charset=utf-8",
               url: "{{ url_for('process_location') }}",
               data: JSON.stringify({pano_id: data.location.pano}),
               success: function(response){
-
-                console.log(data.location.latLng.lat());
-                console.log(data.location.latLng.lng());
 
                 setImage('raw_pano', response.panorama);
                 setImage('segmented', response.segmented);
@@ -148,12 +183,6 @@
               }
           });
 
-
-          marker.addListener('click', function() {
-            var markerPanoID = data.location.pano;
-
-
-          });
         } else {
           console.error('Street View data not found for this location.');
         }
@@ -167,7 +196,8 @@
     <script src="/static/js/lib/jquery.js"></script>
     <script src="/static/js/lib/underscore.js"></script>
     <script src="/static/js/lib/backbone.js"></script>
-    <script src="/static/js/bootstrap.min.js"></script>
+    <script src="/static/js/lib/bootstrap.min.js"></script>
+    <script
   </body>
 </html>
 
