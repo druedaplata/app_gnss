@@ -90,7 +90,6 @@ def set_elevation_lines(img_path, north_w_point=0):
     draw.line(( w0, 0, w0, h ), fill=128)
     w0 = (w0 + w/4)%w
 
-
   img.save(img_path)
 
 

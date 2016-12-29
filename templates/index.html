@@ -15,7 +15,7 @@
         <div class="col-md-4">
           <div class="well">
             <h4>Settings</h4>
-            <h5 class="text-center">...or find the place and click on the map.</h5>
+            <h5 class="text-center">Click on the map or type in the co-ordinates.</h5>
             <div class="row">
               <div class="col-md-12">
                 <div id="map" style="width: 570px; height: 362px; float:left">
@@ -79,7 +79,19 @@
           </div>
 
         </div>
-
+        <div class="col-md-4">
+          <h4>Console Log</h4>
+          <ol>
+            <li><input id="first" type="checkbox" disabled="disabled" />Choosing the correct settings.</li>
+            <li><input id="second" type="checkbox" disabled="disabled" />Downloading panorama tiles from Street View Api.</li>
+            <li><input id="third" type="checkbox" disabled="disabled" />Creating 360° panorama view.</li>
+            <li><input id="fourth" type="checkbox" disabled="disabled" />Segmentating sky from the image using SegNet.</li>
+            <li><input id="fifth" type="checkbox" disabled="disabled" />Obtaining GNSS data.</li>
+            <li><input id="sixth" type="checkbox" disabled="disabled" />Generating a Stereographic projection using the 360° Panorama.</li>
+            <li><input id="seventh" type="checkbox" disabled="disabled" />Generating a Stereographic projection using the Segmented 360° Panorama</li>
+            <li><input id="eigth" type="checkbox" disabled="disabled" />Finished!</li>
+          </ol>
+        </div>
       </div>
 
     </div>
@@ -156,8 +168,6 @@
 
 
       function setImage(id, source){
-          console.log(id);
-          console.log(source);
           document.getElementById(id).innerHTML = "";
           var img = document.createElement("IMG");
           img.setAttribute("src", source);
@@ -167,19 +177,53 @@
 
 
 
-      function processSVData(data, status) {
+      function processSVData(info, status) {
+        //Ajax calls inside ajax calls, I should change this, it looks horrible.
+
         if (status === 'OK') {
           $.ajax({
               type: 'POST',
               contentType: "application/json; charset=utf-8",
-              url: "{{ url_for('process_location') }}",
-              data: JSON.stringify({pano_id: data.location.pano}),
+              url: "{{ url_for('download_tiles') }}",
+              data: JSON.stringify({pano_id: info.location.pano}),
               success: function(response){
-
+                // Show the process
+                $("#first").prop('checked', true);
+                $("#second").prop('checked', true);
+                $("#third").prop('checked', true);
+                // Include panorama and segmented images
                 setImage('raw_pano', response.panorama);
-                setImage('segmented', response.segmented);
-                setImage('planet_normal', response.planet_normal);
-                setImage('planet_cropped', response.planet_cropped);
+
+                $.ajax({
+                  type: 'POST',
+                  contentType: "application/json; charset=utf-8",
+                  url: "{{ url_for('segment_image') }}",
+                  data: JSON.stringify({pano_path: response.panorama}),
+                  success: function(response){
+                    // Show the process
+                    $('#fourth').prop('checked', true);
+                    // Include segmented image
+                    setImage('segmented', response.segmented)
+
+                    $.ajax({
+                      type: 'POST',
+                      contentType: "application/json; charset=utf-8",
+                      url: "{{ url_for('get_stereo_projections') }}",
+                      data: JSON.stringify({normal: response.normal, cropped: response.cropped, north: response.north}),
+                      success: function(response){
+                        // Show the process
+                        $('#fifth').prop('checked', true);
+                        $('#sixth').prop('checked', true);
+                        $('#seventh').prop('checked', true);
+                        // Include Stereographic projections
+                        setImage('planet_normal', response.planet_normal)
+                        setImage('planet_cropped', response.planet_cropped)
+                        // Finish it!
+                        $('#eigth').prop('checked', true);
+                      }
+                    });
+                  }
+                });
               }
           });
 
