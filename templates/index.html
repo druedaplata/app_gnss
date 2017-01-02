@@ -80,16 +80,16 @@
 
         </div>
         <div class="col-md-4">
-          <h4>Console Log</h4>
+          <h4>Console Log <img class="tick" id="loading" src="/static/images/loading.gif"></h4>
           <ol>
-            <li><input id="first" type="checkbox" disabled="disabled" />Choosing the correct settings.</li>
-            <li><input id="second" type="checkbox" disabled="disabled" />Downloading panorama tiles from Street View Api.</li>
-            <li><input id="third" type="checkbox" disabled="disabled" />Creating 360° panorama view.</li>
-            <li><input id="fourth" type="checkbox" disabled="disabled" />Segmentating sky from the image using SegNet.</li>
-            <li><input id="fifth" type="checkbox" disabled="disabled" />Obtaining GNSS data.</li>
-            <li><input id="sixth" type="checkbox" disabled="disabled" />Generating a Stereographic projection using the 360° Panorama.</li>
-            <li><input id="seventh" type="checkbox" disabled="disabled" />Generating a Stereographic projection using the Segmented 360° Panorama</li>
-            <li><input id="eigth" type="checkbox" disabled="disabled" />Finished!</li>
+            <li><img class="tick" id="first" src="/static/images/tick.png"  />Choose the correct settings.</li>
+            <li><img class="tick" id="second" src="/static/images/tick.png" />Downloading panorama tiles from Street View Api.</li>
+            <li><img class="tick" id="third" src="/static/images/tick.png" />Creating 360° panorama view.</li>
+            <li><img class="tick" id="fourth" src="/static/images/tick.png"/>Segmentating sky from the image using SegNet.</li>
+            <li><img class="tick" id="fifth" src="/static/images/tick.png" />Obtaining GNSS data.</li>
+            <li><img class="tick" id="sixth" src="/static/images/tick.png" />Generating a Stereographic projection using the 360° Panorama.</li>
+            <li><img class="tick" id="seventh" src="/static/images/tick.png" />Generating a Stereographic projection using the Segmented 360° Panorama</li>
+            <li><img class="tick" id="eigth" src="/static/images/tick.png" />Finished!</li>
           </ol>
         </div>
       </div>
@@ -181,6 +181,9 @@
         //Ajax calls inside ajax calls, I should change this, it looks horrible.
 
         if (status === 'OK') {
+          $(".tick").hide();
+          $("#loading").show();
+          $("#first").show();
           $.ajax({
               type: 'POST',
               contentType: "application/json; charset=utf-8",
@@ -188,9 +191,8 @@
               data: JSON.stringify({pano_id: info.location.pano}),
               success: function(response){
                 // Show the process
-                $("#first").prop('checked', true);
-                $("#second").prop('checked', true);
-                $("#third").prop('checked', true);
+                $("#second").show();
+                $("#third").show();
                 // Include panorama and segmented images
                 setImage('raw_pano', response.panorama);
 
@@ -201,7 +203,7 @@
                   data: JSON.stringify({pano_path: response.panorama}),
                   success: function(response){
                     // Show the process
-                    $('#fourth').prop('checked', true);
+                    $("#fourth").show();
                     // Include segmented image
                     setImage('segmented', response.segmented)
 
@@ -212,14 +214,15 @@
                       data: JSON.stringify({normal: response.normal, cropped: response.cropped, north: response.north}),
                       success: function(response){
                         // Show the process
-                        $('#fifth').prop('checked', true);
-                        $('#sixth').prop('checked', true);
-                        $('#seventh').prop('checked', true);
+                        $("#fifth").show();
+                        $("#sixth").show();
+                        $("#seventh").show();
                         // Include Stereographic projections
                         setImage('planet_normal', response.planet_normal)
                         setImage('planet_cropped', response.planet_cropped)
                         // Finish it!
-                        $('#eigth').prop('checked', true);
+                        $("#eigth").show();
+                        $("#loading").hide();
                       }
                     });
                   }

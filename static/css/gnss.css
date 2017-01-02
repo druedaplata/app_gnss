@@ -2,4 +2,8 @@
   height: 100%;
 }
 
-
+img.tick {
+  height: 1em;
+  width: auto;
+  display: none;
+}
