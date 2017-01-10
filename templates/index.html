@@ -12,44 +12,44 @@
   <body>
     <div class="container-fluid">
       <div class="row" style="margin-top: 10px">
-        <div class="col-md-4">
+        <div class="col-md-4 col-xs-6">
           <div class="well">
             <h4>Settings</h4>
             <h5 class="text-center">Click on the map or type in the co-ordinates.</h5>
             <div class="row">
-              <div class="col-md-12">
-                <div id="map" style="width: 570px; height: 362px; float:left">
+              <div class="col-md-12 col-xs-12">
+                <div id="map">
                 </div>
               </div>
             </div>
             <div class="row">
               <form>
-                <div class="col-md-6 form-group">
+                <div class="col-md-6 col-xs-6 form-group">
                   <label for="date">Date:</label>
                   <input id="date" class="form-control" type="text" placeholder="dd/mm/aaaa">
                 </div>
-                <div class="col-md-6 form-group">
+                <div class="col-md-6 col-xs-6 form-group">
                   <label for="time">Time:</label>
                   <input id="time" class="form-control" type="text" placeholder="hh/mm">
                 </div>
-                <div class="col-md-6 form-group">
+                <div class="col-md-6 col-xs-6 form-group">
                   <label for="lat">Latitude</label>
                   <input id="lat" class="form-control" type="text" placeholder="40.72815832561118">
                 </div>
-                <div class="col-md-6 form-group">
+                <div class="col-md-6 col-xs-6 form-group">
                   <label for="lng">Longitude</label>
                   <input id="lng" class="form-control" type="text" placeholder="-73.99564975565187">
                 </div>
               </form>
             </div>
             <div class="row" style="margin-top: 10px">
-              <div class="col-md-4 col-md-offset-4 text-center">
+              <div class="col-md-4 col-md-offset-4 col-xs-6 col-xs-offset-3 text-center">
                 <button type="button" onClick="search()" class="btn btn-info btn-block">Search</button>
               </div>
             </div>
           </div>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-4 col-xs-6">
           <ul class="nav nav-tabs">
             <li class="active"><a data-toggle="tab" href="#normal">Stereographic</a></li>
             <li><a data-toggle="tab" href="#cropped">Segmented Sky</a></li>
@@ -58,7 +58,7 @@
           <div class="tab-content">
             <div id="normal" class="tab-pane fade in active">
               <div class="row">
-                <div class="col-md-12">
+                <div class="col-md-12 col-xs-12">
                   <div id="planet_normal">
                   </div>
                 </div>
@@ -66,29 +66,28 @@
             </div>
             <div id="cropped" class="tab-pane fade">
               <div class="row">
-                <div class="col-md-12">
+                <div class="col-md-12 col-xs-12">
                   <div id="planet_cropped">
                   </div>
                 </div>
               </div>
             </div>
             <div id="images" class="tab-pane fade">
-              <div id="raw_pano" class="col-md-12"></div>
-              <div id="segmented" class="col-md-12"></div>
+              <div id="raw_pano" class="col-md-12 col-xs-12"></div>
+              <div id="segmented" class="col-md-12 col-xs-12"></div>
             </div>
           </div>
-
         </div>
-        <div class="col-md-4">
+        <div class="col-md-4 col-xs-6">
           <h4>Console Log <img class="tick" id="loading" src="/static/images/loading.gif"></h4>
           <ol>
-            <li><img class="tick" id="first" src="/static/images/tick.png"  />Choose the correct settings.</li>
-            <li><img class="tick" id="second" src="/static/images/tick.png" />Downloading panorama tiles from Street View Api.</li>
-            <li><img class="tick" id="third" src="/static/images/tick.png" />Creating 360° panorama view.</li>
-            <li><img class="tick" id="fourth" src="/static/images/tick.png"/>Segmentating sky from the image using SegNet.</li>
-            <li><img class="tick" id="fifth" src="/static/images/tick.png" />Obtaining GNSS data.</li>
-            <li><img class="tick" id="sixth" src="/static/images/tick.png" />Generating a Stereographic projection using the 360° Panorama.</li>
-            <li><img class="tick" id="seventh" src="/static/images/tick.png" />Generating a Stereographic projection using the Segmented 360° Panorama</li>
+            <li><img class="tick" id="first" src="/static/images/tick.png"  />Choose correct settings.</li>
+            <li><img class="tick" id="second" src="/static/images/tick.png" />Download panorama tiles from Street View Api.</li>
+            <li><img class="tick" id="third" src="/static/images/tick.png" />Create 360° panorama view.</li>
+            <li><img class="tick" id="fourth" src="/static/images/tick.png"/>Segment sky from the image using SegNet.</li>
+            <li><img class="tick" id="fifth" src="/static/images/tick.png" />Obtain GNSS data.</li>
+            <li><img class="tick" id="sixth" src="/static/images/tick.png" />Generate a Stereographic projection.</li>
+            <li><img class="tick" id="seventh" src="/static/images/tick.png" />Generate a Stereographic projection using segmented sky.</li>
             <li><img class="tick" id="eigth" src="/static/images/tick.png" />Finished!</li>
           </ol>
         </div>

@@ -2,6 +2,7 @@ from PIL import Image, ImageDraw, ImageFont
 import numpy as np
 import matplotlib.pyplot as plt
 import os.path
+import os
 import scipy
 import math
 import cv2
@@ -60,8 +61,10 @@ def get_normal_image(image_path):
 
   normal_full_img = join_images_horizontally(resized_images)
 
+  folder = "static/images/panorama"
+
   name = next(tempfile._get_candidate_names())
-  normal_path = "static/images/panorama/%s_resized.png" % (name)
+  normal_path = "%s/%s_resized.png" % (folder, name)
   normal_full_img.save(normal_path)
 
   return normal_path
@@ -118,8 +121,12 @@ def get_segmented_image(image_path):
 
   # 5. Create a single full image from the segmented parts
   segmented_full_image = join_images_horizontally(segmented_images)
+
+  folder = "static/images/segmented"
+  os.system("rm %s/*.png" % (folder))
+
   name = next(tempfile._get_candidate_names())
-  segment_path = "static/images/segmented/%s_resized.png" % (name)
+  segment_path = "%s/%s_resized.png" % (folder, name)
   segmented_full_image.save(segment_path)
   return segment_path
 
@@ -143,8 +150,11 @@ def get_masked_image(normal_image, segmented_image):
   mask = cv2.inRange(segmented_image, lower, upper)
   output = cv2.bitwise_and(normal_image, normal_image, mask = mask)
 
+  folder = "static/images/cropped"
+  os.system("rm %s/*.png" % (folder))
+
   name = next(tempfile._get_candidate_names())
-  path = "static/images/cropped/%s.png" % (name)
+  path = "%s/%s.png" % (folder, name)
   cv2.imwrite(path, output)
   return path
 

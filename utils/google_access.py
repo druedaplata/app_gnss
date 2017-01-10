@@ -3,6 +3,7 @@ import glob
 from PIL import Image
 import tempfile
 import subprocess
+import os
 
 
 
@@ -58,10 +59,15 @@ def get_raw_panorama(pano_id):
       x_off += im.size[0]
 
   # 6. Save the new panorama image
-  # 6.1 We crop the width of the panorama image by hand, to have a 360 degrees view without repetition.
+
+  # 6.1 Delete all previous panorama images
+  folder = "static/images/panorama"
+  os.system("rm %s/*.png" % (folder))
+
+  # 6.2 We crop the width of the panorama image by hand, to have a 360 degrees view without repetition.
   name = next(tempfile._get_candidate_names())
   w,h = panorama.size
-  pano_path = "static/images/panorama/%s.png" % (name)
+  pano_path = "%s/%s.png" % (folder, name)
 
   panorama.crop((0,0, 3328, 1248)).save(pano_path)
 

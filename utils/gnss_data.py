@@ -106,7 +106,7 @@ def set_directions(img_path, north_w_point=0):
   w,h = (960,360)
 
   draw = ImageDraw.Draw(img)
-  font = ImageFont.truetype("utils/font.ttf", 20)
+  font = ImageFont.truetype("utils/font.ttf", 30)
 
   theta_offset = (north_w_point/(w*1.0))*360
   # north (el: 0, az:0)

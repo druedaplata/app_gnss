@@ -88,8 +88,11 @@ def get_planet_image(image_path):
     input_coords = r_theta_to_input_coords(r_theta)
     return input_coords
 
+  # Delete all residual images
+  folder = "static/images/planet"
+
   name = next(tempfile._get_candidate_names())
-  planet_path = "static/images/planet/%s.png" % (name)
+  planet_path = "%s/%s.png" % (folder, name)
   plt.imsave(planet_path, warp(pano, get_planet, output_shape=output_shape))
 
   return planet_path
