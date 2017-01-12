@@ -2,6 +2,8 @@
 
 ## Installation Instructions
 
+0. Clone this repository *git clone https://github.com/sandiego206/app_gnss.git*
+
 1. Install opencv using **sudo apt-get install libopencv-dev python-opencv python-tk**
 
 2. Follow the instructions to install [SegNet](https://github.com/alexgkendall/caffe-segnet)
@@ -18,6 +20,8 @@
 7. Open the application at *localhost:5000*
 
 ## Run as Docker Container
+
+0. Clone this repository *git clone https://github.com/sandiego206/app_gnss.git*
 
 1. Install [Docker](https://docs.docker.com/engine/installation/)
 
