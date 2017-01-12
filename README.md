@@ -21,9 +21,9 @@
 
 1. Install [Docker](https://docs.docker.com/engine/installation/)
 
-2. Build the container * docker build -t youruser/app_gnss . * from Dockerfile directory. This may take a while.
+2. Build the container *docker build -t youruser/app_gnss .* from Dockerfile directory. This may take a while.
 
-3. Run the container with * docker run -t -i -p 5000:5000 drueda/app_gnss python main.py *
+3. Run the container with *docker run -t -i -p 5000:5000 youruser/app_gnss python main.py*
 
 4. Open the application at *localhost:5000*
 
