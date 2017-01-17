@@ -25,13 +25,14 @@ def download_tiles():
 @app.route('/segment_image', methods=['POST'])
 def segment_image():
   pano_path = request.json['pano_path']
+  north_heading = request.json['north_heading']
 
   normal_path = sg.get_normal_image(pano_path)
   segment_path = sg.get_segmented_image(normal_path)
   cropped_path = sg.get_cropped_image(normal_path, segment_path)
 
-  # set the north pixel in the image
-  north_w_point = 850
+  # get the north pixel in the image, according to center heading
+  north_w_point = gd.get_north_w_point_from_heading(normal_path, north_heading)
 
   # add cardinal lines
   gd.set_elevation_lines(normal_path, north_w_point)

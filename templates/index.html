@@ -178,7 +178,6 @@
 
       function processSVData(info, status) {
         //Ajax calls inside ajax calls, I should change this, it looks horrible.
-
         if (status === 'OK') {
           $(".tick").hide();
           $("#loading").show();
@@ -199,7 +198,7 @@
                   type: 'POST',
                   contentType: "application/json; charset=utf-8",
                   url: "{{ url_for('segment_image') }}",
-                  data: JSON.stringify({pano_path: response.panorama}),
+                  data: JSON.stringify({pano_path: response.panorama, north_heading: info.tiles.centerHeading}),
                   success: function(response){
                     // Show the process
                     $("#fourth").show();

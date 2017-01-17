@@ -20,7 +20,6 @@ def transform_polar_to_input(r, theta, w, h, theta_offset):
   return xs, ys
 
 
-
 def generate_random_data(img_path, north_w_point=0):
   """
   Gets an image path, and randomly generate coordinate points
@@ -62,6 +61,24 @@ def set_points(img_path, data):
     draw.ellipse((x-5, y-5, x+5, y+5), fill=(0,255,0))
 
   img.save(img_path)
+
+
+def get_north_w_point_from_heading(img_path, north_heading):
+  """
+  Gets a heading pointing north,
+  and returns a horizontal pixel where it should be
+
+    Attributes:
+      img_path: String
+      north_heading: double
+  """
+  img = Image.open(img_path)
+  w,h = img.size
+
+  return ((((north_heading/360.0) * w) + w/2) % w)
+
+
+
 
 
 def set_elevation_lines(img_path, north_w_point=0):
