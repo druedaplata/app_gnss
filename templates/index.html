@@ -115,7 +115,7 @@
         map = new google.maps.Map(document.getElementById('map'), {
           center: position,
           zoom: 16,
-          streetViewControl: false,
+          streetViewControl: true,
           mapTypeControl: false
         });
 
@@ -193,7 +193,6 @@
                 $("#third").show();
                 // Include panorama and segmented images
                 setImage('raw_pano', response.panorama);
-
                 $.ajax({
                   type: 'POST',
                   contentType: "application/json; charset=utf-8",

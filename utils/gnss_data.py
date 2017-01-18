@@ -75,7 +75,7 @@ def get_north_w_point_from_heading(img_path, north_heading):
   img = Image.open(img_path)
   w,h = img.size
 
-  return ((((north_heading/360.0) * w) + w/2) % w)
+  return ((((360-north_heading/360.0) * w) + w/2) % w)
 
 
 
