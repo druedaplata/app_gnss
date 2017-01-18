@@ -94,8 +94,9 @@ def get_planet_image(image_path):
   name = next(tempfile._get_candidate_names())
   planet_path = "%s/%s.png" % (folder, name)
   planet_bgr = warp(pano, get_planet, output_shape=output_shape)
-  #planet_image_rgb = cv2.cvtColor(planet_bgr, cv2.COLOR_BGR2RGB)
-  cv2.imwrite(planet_path, 255*planet_bgr)
+  b,g,r = cv2.split(planet_bgr)
+  im = cv2.merge([r,g,b])
+  cv2.imwrite(planet_path, 255*im)
 
 
   return planet_path
