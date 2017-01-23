@@ -25,36 +25,30 @@
 
 1. Install [Docker](https://docs.docker.com/engine/installation/)
 
-2. Build the container *docker build -t youruser/app_gnss .* from Dockerfile directory. This may take a while.
+2. Build the container **docker build -t youruser/app_gnss /path/to/Dockerfile**. This may take a while.
 
-3. Run the container with *docker run -t -i -p 5000:5000 youruser/app_gnss python main.py*
+3. Run the container with **docker run -t -i -p 5000:5000 youruser/app_gnss python main.py**
 
-4. Open the application at *localhost:5000*
+4. Open the application at **localhost:5000**
 
-## How it works? - 01/12/2016
+## How it works? - 23/01/2017
 
-1. We start by using a location from Google Maps Api.
+1. We start by clicking in any Street, and click on Search. 
 ![gmaps_api](https://raw.githubusercontent.com/sandiego206/app_gnss/master/static/images/readme_images/gmaps_api.jpg)
 
-2. We create an equirectangular image showing a 360° view of the location from Google Maps Api, we do this by stitching several tiles obtained from Street View Api.
+2. We create an equirectangular image showing a 360° view of the location from Google Maps Api, we do this by stitching several tiles obtained from Google Street View Api.
 ![raw_panorama](https://raw.githubusercontent.com/sandiego206/app_gnss/master/static/images/readme_images/pano.jpg)
 
 3. From the equirectangular image, we use SegNet to segment the image.
 ![segment](https://raw.githubusercontent.com/sandiego206/app_gnss/master/static/images/readme_images/segmented.jpg)
 
-4. We extract the sky from the previous image using a mask for the color gray, and draw elevation and cardinal lines.
-   The north must be set manually (at the moment)
-![sky_extract](https://raw.githubusercontent.com/sandiego206/app_gnss/master/static/images/readme_images/sky_extract.jpg)
-
-5. We now use a stereographic projection in the equirectangular panorama image, to display the enitre sky in the center region.
-   And we (at the moment) generate random (elevation, azimut) pairs of data and correctly display them in the image.
+4. We use a Stereographic projection in the equirectangular panorama image, to display the entire sky in the center region.
+   And generate random (elevation, azimut) pairs of data and correctly display them in the image.
 ![stereo_images](https://raw.githubusercontent.com/sandiego206/app_gnss/master/static/images/readme_images/stereo_images.jpg)
 
+5. Using a mask for the sky in the segmented image, we create a stereographic projection that show only the visible sky at the location. Images are rotated in order to have North always on top.
 
 ## To Do:
-
-1. Correctly get the North in each position, and automatically draw in the image.
-2. Find a way to draw the elevation lines accurately according to the stereographic projection.
-3. Be able to create a route in Google Maps Api and generate a video with the final result.
-
+1. Inform the user when there is no StreetView data available for a location.
+2. Use real satellite data and draw them correctly in the images.
 
