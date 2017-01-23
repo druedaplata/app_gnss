@@ -138,8 +138,8 @@
           map.setCenter(data.location.latLng);
 
           // Update information in settings
-          document.getElementById('lat').value = data.location.latLng.lat();
-          document.getElementById('lng').value = data.location.latLng.lng();
+          $('#lat').val(data.location.latLng.lat());
+          $('#lng').val(data.location.latLng.lng());
 
         } else {
           console.error('Street View data not found for this location.');
@@ -149,11 +149,9 @@
 
       function search(options){
 
-        //Change to disabled
-        document.getElementById("search").disabled = true;
         // Get values from settings
-        var lat = document.getElementById('lat').value;
-        var lng = document.getElementById('lng').value;
+        var lat = $('#lat').val();
+        var lng = $('#lng').val();
 
         if (lat && lng) {
           // Create a new position
@@ -182,6 +180,8 @@
 
 
       function processSVData(info, status) {
+        //Change to disabled
+        $('#search').prop('disabled', true);
         //Ajax calls inside ajax calls, I should change this, it looks horrible.
         if (status === 'OK') {
           $(".tick").hide();
@@ -191,6 +191,7 @@
               type: 'POST',
               contentType: "application/json; charset=utf-8",
               url: "{{ url_for('download_tiles') }}",
+              async: false,
               data: JSON.stringify({pano_id: info.location.pano}),
               success: function(response){
                 // Show the process
@@ -202,6 +203,7 @@
                   type: 'POST',
                   contentType: "application/json; charset=utf-8",
                   url: "{{ url_for('segment_image') }}",
+                  async: false,
                   data: JSON.stringify({pano_path: response.panorama, north_heading: info.tiles.centerHeading}),
                   success: function(response){
                     // Show the process
@@ -213,6 +215,7 @@
                       type: 'POST',
                       contentType: "application/json; charset=utf-8",
                       url: "{{ url_for('get_stereo_projections') }}",
+                      async: false,
                       data: JSON.stringify({normal: response.normal, cropped: response.cropped, north: response.north}),
                       success: function(response){
                         // Show the process
@@ -235,6 +238,8 @@
         } else {
           console.error('Street View data not found for this location.');
         }
+        console.log('enabling');
+        $('#search').prop('disabled', false);
       }
     </script>
 
