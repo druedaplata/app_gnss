@@ -37,16 +37,17 @@
 ![gmaps_api](https://raw.githubusercontent.com/sandiego206/app_gnss/master/static/images/readme_images/gmaps_api.jpg)
 
 2. We create an equirectangular image showing a 360° view of the location from Google Maps Api, we do this by stitching several tiles obtained from Google Street View Api.
-![raw_panorama](https://raw.githubusercontent.com/sandiego206/app_gnss/master/static/images/readme_images/pano.jpg)
+![raw_panorama](https://raw.githubusercontent.com/sandiego206/app_gnss/master/static/images/readme_images/panorama.jpg)
 
 3. From the equirectangular image, we use SegNet to segment the image.
 ![segment](https://raw.githubusercontent.com/sandiego206/app_gnss/master/static/images/readme_images/segmented.jpg)
 
 4. We use a Stereographic projection in the equirectangular panorama image, to display the entire sky in the center region.
    And generate random (elevation, azimut) pairs of data and correctly display them in the image.
-![stereo_images](https://raw.githubusercontent.com/sandiego206/app_gnss/master/static/images/readme_images/stereo_images.jpg)
+![stereo_images](https://raw.githubusercontent.com/sandiego206/app_gnss/master/static/images/readme_images/stereo.jpg)
 
 5. Using a mask for the sky in the segmented image, we create a stereographic projection that show only the visible sky at the location. Images are rotated in order to have North always on top.
+![segmented_stereo](https://raw.githubusercontent.com/sandiego206/app_gnss/master/static/images/readme_images/segmented_stereo.jpg)
 
 ## To Do:
 1. Inform the user when there is no StreetView data available for a location.
