@@ -110,7 +110,7 @@ def set_elevation_lines(img_path, north_w_point=0):
   img.save(img_path)
 
 
-def set_directions(img_path, north_w_point=0):
+def rotate_and_set_directions(img_path, north_w_point=0):
   """
   Gets an image path, and sets directions NWSE,
   using arbitrary positions assuming north is always in the center.
@@ -120,24 +120,29 @@ def set_directions(img_path, north_w_point=0):
 
   """
   img = Image.open(img_path)
-  w,h = (960,360)
-
-  draw = ImageDraw.Draw(img)
-  font = ImageFont.truetype("utils/font.ttf", 30)
+  w, h = (960,360)
 
   theta_offset = (north_w_point/(w*1.0))*360
-  # north (el: 0, az:0)
-  x,y = transform_polar_to_input(0, 0, w, h, theta_offset)
-  draw.text((x,y+10), "N", (0,255,0), font=font)
-  # east (el:0, az:90)
-  x,y = transform_polar_to_input(0, 90, w, h, theta_offset)
-  draw.text((x,y+10), "E", (0,255,0), font=font)
-  # south (el:0, az: 180)
-  x,y = transform_polar_to_input(0, 180, w, h, theta_offset)
-  draw.text((x,y+10), "S", (0,255,0), font=font)
-  # west (el:0, az: 270)
-  x,y = transform_polar_to_input(0, 270, w, h, theta_offset)
-  draw.text((x,y+10), "W", (0,255,0), font=font)
 
-  img.save(img_path)
+  img2 = img.rotate(theta_offset - 90)
+
+  draw = ImageDraw.Draw(img2)
+  font = ImageFont.truetype("utils/font.ttf", 30)
+  w,h = img2.size
+
+  # north (el: 0, az:0)
+  x,y = w/2, 0
+  draw.text((x+5,y+5), "N", (0,255,0), font=font)
+  # east (el:0, az:90)
+  x,y = w, h/2
+  draw.text((x-25,y+5), "E", (0,255,0), font=font)
+  # south (el:0, az: 180)
+  x,y = w/2, h
+  draw.text((x+5,y-30), "S", (0,255,0), font=font)
+  # west (el:0, az: 270)
+  x,y = 0, h/2
+  draw.text((x+5,y+5), "W", (0,255,0), font=font)
+
+
+  img2.save(img_path)
 

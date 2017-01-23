@@ -57,8 +57,8 @@ def get_stereo_projections():
   gd.set_points(planet_normal, data)
   gd.set_points(planet_cropped, data)
 
-  gd.set_directions(planet_normal, nort_w_point)
-  gd.set_directions(planet_cropped, nort_w_point)
+  gd.rotate_and_set_directions(planet_normal, nort_w_point)
+  gd.rotate_and_set_directions(planet_cropped, nort_w_point)
 
   output = {'planet_normal': planet_normal, 'planet_cropped': planet_cropped}
 
