@@ -2,7 +2,7 @@
 
 ## Installation Instructions
 
-0. Clone this repository *git clone https://github.com/sandiego206/app_gnss.git*
+0. Clone this repository *git clone https://github.com/druedaplata/app_gnss.git*
 
 1. Install opencv using **sudo apt-get install libopencv-dev python-opencv python-tk**
 
@@ -21,7 +21,7 @@
 
 ## Run as Docker Container
 
-0. Clone this repository *git clone https://github.com/sandiego206/app_gnss.git*
+0. Clone this repository *git clone https://github.com/druedaplata/app_gnss.git*
 
 1. Install [Docker](https://docs.docker.com/engine/installation/)
 
